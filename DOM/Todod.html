@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>
+    let count =0;
+
+    function CreateComponent(title,description,id)
+    {
+        const mainDiv = document.createElement("div");
+
+
+        const childDiv1 = document.createElement("div");
+        childDiv1.innerHTML = title;
+
+        const childDiv2 = document.createElement("div");
+        childDiv2.innerHTML = description;
+
+        const childButton = document.createElement("button");
+        childButton.innerHTML = "Mark as Done"
+        childButton.setAttribute("onclick",`completeTask(${id})`)
+
+        // append all three children
+        mainDiv.appendChild(childDiv1);
+        mainDiv.appendChild(childDiv2)
+        mainDiv.appendChild(childButton);
+        mainDiv.setAttribute("id", id);
+
+        return mainDiv;
+
+    }
+
+    function updateDomState(state)
+    {
+        console.log(state);
+        const parent = document.getElementById("container");
+        parent.innerHTML = "";
+        for(let i=0;i<state.length;i++)
+        {
+            const component = CreateComponent(state[0]['title'],state[0]['description'],state[0]['id']);
+            parent.appendChild(component);
+        }
+    }
+
+    window.setInterval(async function()
+    {
+        const res = await fetch(`https://sum-server.100xdevs.com/todos`)
+        const states = await res.json()
+        updateDomState(states.todos);
+
+
+    },5000)
+    function createTask()
+    {
+        const title = document.getElementById("title").value;
+        const description = document.getElementById("description").value;
+
+        const component = CreateComponent(title,description,count);
+        count++;
+        // add to dom
+        document.getElementById("container").appendChild(component);
+        // one way of doing it
+        // const originalHtml = document.getElementById("container").innerHTML;
+        // document.getElementById("result").innerHTML = originalHtml + ` <div>
+        //     <h1> Title</h1>
+        //     <div>${title}</div>
+        //     <h2> description</h2>
+        //     <div>${description}</div>
+        // </div>`
+
+    }
+    function completeTask(uniqueId)
+    {
+        // gives the specific component with the id
+        const parent = document.getElementById(uniqueId);
+        // updating the button text
+        parent.children[2].innerHTML = "Task Completed"
+
+    }
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <input type="text" id="title" placeholder="Title">
+</div>
+<div>
+    <input type="text" placeholder="Add task 2" id="description">
+
+</div>
+<button onclick="createTask()"> Create Task</button>
+
+<div id="container">
+
+</div>
+</body>
+</html>

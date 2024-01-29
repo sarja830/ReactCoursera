@@ -1,0 +1,42 @@
+<html>
+<script>
+    function populateDiv()
+    {
+        const a = document.getElementById("FirstNumber").value;
+        const b = document.getElementById("SecondNumber").value;
+        // document variable global variable you can manipulate the dom
+
+        const element = document.getElementById("finalSum");
+        fetch(`https://sum-server.100xdevs.com/sum?a="${a}&b=${b}`).then(
+            (res)=> {
+                console.log(res);
+                res.text().then(function (respo){
+                 document.getElementById("FinalSum").innerHTML = respo;
+                })
+            } // string
+        )
+//         alert( a+b) // string
+// // how to access value from input box
+//         // dom lets you change the html dynamically put html inside an element
+//         element.innerHTML = parseInt(a)+parseInt(b)
+    }
+</script>
+<style>
+    .container {
+        background-color: red;
+
+    }
+</style>
+<body>
+<!--id used for identifier single identity class can be common-->
+<!--id let you access the dom element-->
+    <input class="container" type="text"  id="FirstNumber" placeholder="one" >
+    <br>
+    <input class="container" type="text" id="SecondNumber" placeholder="two">
+    <br>
+    <button onclick="populateDiv()"> Calculate sum</button>
+    <br>
+<!--// to make website dynamic dom api-->
+    <div id="FinalSum"> </div>
+</body>
+</html>
